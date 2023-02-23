@@ -74,7 +74,7 @@ contract swapContract {
         }
         individualLiquidityPool[msg.sender][liquidityToken] += amount;
         uniqueTokenPool[liquidityToken] += amount;
-        liquidityToken.transferFrom(address(this), msg.sender, amount);
+        liquidityToken.transferFrom(msg.sender, address(this), amount);
     }
 
     //create swap functions
@@ -83,10 +83,12 @@ contract swapContract {
         IERC20 tokenB,
         uint256 amount
     ) public {
+        tokenA.transferFrom(msg.sender, address(this), amount);
         uint256 _swapValueA = swapValueA(tokenA, amount); // dollar equivalet for tokenA
         uint256 _swapValueB = swapValueB(tokenB, amount); // dollar equivalet for tokenB
         uint256 returnAmountB = _swapValueB / _swapValueA;
-        tokenB.transferFrom(address(this), msg.sender, returnAmountB);
+
+        tokenB.transfer(msg.sender, returnAmountB);
         uniqueTokenPool[tokenB] -= returnAmountB;
     }
 

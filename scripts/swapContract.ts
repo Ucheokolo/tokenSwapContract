@@ -40,18 +40,55 @@ async function main() {
     const uniContract = await ethers.getContractAt("iToken", uniToken);
     const uniBal = await uniContract.balanceOf(tokenHolder1);
     console.log(`bal is ${uniBal}`);
-    await uniContract.connect(impersonatedSigner).approve(UcheSwap.address, 1000);
-    console.log(`done`);
+    await uniContract.connect(impersonatedSigner).approve(UcheSwap.address, 10000);
+    console.log(`**** Approval given by UNI contract to UcheSwap ****`);
 
 
     // Add Liquidity
 
-    // await UcheSwap.connect(impersonatedSigner).addLiquidity(uniToken, 800);
-    // const UcheSwapUniBal = await uniContract.balanceOf(UcheSwap.address)
-    // console.log(`${UcheSwapUniBal}`);
+    // Add UNI liquidity
+    await UcheSwap.connect(impersonatedSigner).addLiquidity(uniToken, 800);
+    const UcheSwapUniBal = await uniContract.balanceOf(UcheSwap.address)
+    console.log(`UNI liquidity is ${UcheSwapUniBal}`);
 
-    // const UcheSwapBal = await uniContract.balanceOf(UcheSwap.address);
-    // console.log(`${UcheSwapBal}`);
+    // get link contract, give approval and add liquidity
+    const linkContract = await ethers.getContractAt("iToken", linkToken);
+    const linkBal = await linkContract.balanceOf(tokenHolder1);
+    console.log(`The link balance for holder1 is ${linkBal}`);
+    await linkContract.connect(impersonatedSigner).approve(UcheSwap.address, 2000);
+    console.log(`**** Approval given by LINK contract to UcheSwap ****`)
+
+    // add liquidity
+    await UcheSwap.connect(impersonatedSigner).addLiquidity(linkToken, 1200);
+    const UcheSwapLinkBal = await linkContract.balanceOf(UcheSwap.address);
+    console.log(`LINK liquidity is ${UcheSwapLinkBal}`);
+
+    // USDC
+    // get contract
+    const usdcContract = await ethers.getContractAt("iToken", usdcToken);
+    const usdcBal = await usdcContract.balanceOf(tokenHolder1);
+    console.log(`The usdc balance for holder1 is ${usdcBal}`);
+    // give approval
+    await usdcContract.connect(impersonatedSigner).approve(UcheSwap.address, 4000);
+    console.log(`**** Approval given by USDC contract to UcheSwap ****`)
+
+
+    // Swap token
+    //bal b4
+    const usdcBalB4 = await usdcContract.balanceOf(tokenHolder1);
+    console.log(`The usdc balance for holder1 before is ${usdcBalB4}`);
+
+    await UcheSwap.connect(impersonatedSigner).swapToken(usdcToken, linkToken, 100);
+    const UcheSwapUsdcBal = await usdcContract.balanceOf(UcheSwap.address);
+    console.log(`successfully swapped usdc. swap usdc balance is ${UcheSwapUsdcBal}`);
+
+    // bal After
+    const usdcBalAfter = await usdcContract.balanceOf(tokenHolder1);
+    console.log(`The usdc balance for holder1 after swap is ${usdcBalAfter}`);
+
+
+
+
 
 
 
