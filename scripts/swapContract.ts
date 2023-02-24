@@ -18,10 +18,22 @@ async function main() {
 
 
     // impersonate account
+    // all tokens holder
     const helpers = require("@nomicfoundation/hardhat-network-helpers");
     const tokenHolder1 = "0x864894Af6B4A911F4d34C2E5aeAADfe2B012c15D";
     await helpers.impersonateAccount(tokenHolder1);
     const impersonatedSigner = await ethers.getSigner(tokenHolder1);
+
+    // daiHolder
+    const daiHolder1 = "0x748dE14197922c4Ae258c7939C7739f3ff1db573";
+    await helpers.impersonateAccount(daiHolder1);
+    const impersonatedSignerDai = await ethers.getSigner(daiHolder1);
+
+    // usdcHolder
+    const usdcHolder1 = "0x56178a0d5F301bAf6CF3e1Cd53d9863437345Bf9";
+    await helpers.impersonateAccount(usdcHolder1);
+    const impersonatedSignerUsdc = await ethers.getSigner(usdcHolder1);
+
 
 
 
